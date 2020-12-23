@@ -43,7 +43,7 @@ class Record():
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
-    p = pyaudio.Pyaudio()
+    p = pyaudio.PyAudio()
     @classmethod
     def record(cls):
         '''maybe'''
