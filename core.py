@@ -1,38 +1,45 @@
 #这里要作为一个自动机的核心
 import threading
 import time
-from functools import wraps
+import Ways
+import Libs
+from Class import Timer
 def A():
     pass
 def B():
     pass
 def C():
     pass
-INITIAL_STATE_ID = 0
-DEBUG = True
-
-def log(func):
-    @wraps(func)
-    def wrapper():
-        print("Start of %s."%func.__name__)
-        func()
-        print("End of %s."%func.__name__)
-    return wrapper
-def StandBy():
-    global state_id
-    state_id = int(input())
 
 
-state={0:StandBy,1:A,2:B,3:C}
-state_id = INITIAL_STATE_ID
-while __name__ == "__main__":
-    now_state = state[state_id]
-    if(state_id==-1):
-        print('exit')
-        exit
-    if(DEBUG):
-        now_state = log(now_state)
-    thread_local = threading.Thread(target=now_state)
-    thread_local.start()
-    thread_local.join()
-    print("Next:",state_id)
+
+
+
+
+
+# Libs.Baidu_YuYinHeCheng(TEXT)
+# exit()
+
+
+if __name__ == "__main__":
+    T = Timer()
+    while True:
+        act_id = Libs.Act()
+        if act_id == 1: #计时五分钟
+            T.Start(5*60)
+        elif act_id == 2: #计时一分钟
+            T.Start(1*60)
+        elif act_id == 3: #暂停计时
+            T.Pause()
+        elif act_id == 4: #继续计时
+            T.Resume()
+        elif act_id == 5: #计时器还剩多久
+            T.Showtime()
+        elif act_id == 6: #停止计时
+            T.Stop()
+        elif act_id == 7: #现在的室温是几度
+            pass
+        elif act_id == 8: #今天天气怎么样
+            pass
+        elif act_id == 0: #退出
+            pass
