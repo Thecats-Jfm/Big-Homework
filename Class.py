@@ -41,6 +41,7 @@ class Timer():
 
     def Start(self, times):
         self.time = times
+        self.exit_flag = False
         if hasattr(self, 'Thread'):
             print("Stop old thread.")
             self.Thread.stop()
@@ -68,9 +69,11 @@ class Timer():
         if(self.time > 0):
             time.sleep(1)
             self.time = self.time - 1
+        print(self.time)
         return self.time
 
     def exit(self):
         for i in range(100):
+            if self.exit_flag:
+                break
             Libs.Output('timer_end.wav')
-

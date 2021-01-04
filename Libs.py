@@ -23,7 +23,7 @@ CUID = "123456PYTHON"
 TTS_URL = 'http://tsn.baidu.com/text2audio'
 TOKEN_URL = 'http://openapi.baidu.com/oauth/2.0/token'
 SCOPE = 'audio_tts_post'  # 语音合成tag
-
+nid = 0
 
 class DemoError(Exception):  # 错误类
     pass
@@ -53,6 +53,8 @@ def fetch_token():  # 生成token
 
 
 def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
+    global nid
+    nid += 1
     token = fetch_token()
     tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
     params = {'tok': token, 'tex': tex, 'per': PER, 'spd': SPD, 'pit': PIT, 'vol': VOL, 'aue': AUE, 'cuid': CUID,
@@ -71,7 +73,7 @@ def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
         print('asr http response http code : ' + str(err.code))
         result_str = err.read()
         has_error = True
-    save_file = "error.txt" if has_error else '.\\wav\\result.' + FORMAT
+    save_file = "error.txt" if has_error else '.\\wav\\temp\\result'+str(nid)+'.' + FORMAT
     with open(save_file, 'wb') as of:
         of.write(result_str)
     if has_error:
@@ -93,6 +95,7 @@ def Output(Path):  # 从wav文件夹下输出
 
 
 def OutputText(Text):  # 通过百度TTS生成wav并输出
+    global nid
     Baidu_TTS(Text)
-    path = 'result.wav'
+    path = 'temp\\result'+str(nid)+'.wav'
     Output(path)

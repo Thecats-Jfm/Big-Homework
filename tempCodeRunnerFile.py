@@ -1,2 +1,2 @@
 
-thread1.join()
+            tp()
