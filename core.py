@@ -3,7 +3,7 @@ import threading
 import time
 import Ways
 import Libs
-# import Pi
+import Pi
 from Class import Timer
 
 T = Timer()
@@ -36,8 +36,11 @@ if __name__ == "__main__":
             print('现在的室温是%.2lf°C'%t)
             Libs.OutputText('现在的室温是%.2lf°C'%t)
         elif act_id == 8:  # 今天天气怎么样
-            pass
+            Libs.Output('wait.wav')
+            Libs.OutputText(Libs.Get_Weather())
         elif act_id == 0:  # 退出
             Libs.Output('goodbye.wav')
+            Pi.Finish()
+            exit()
         else :
             pass
