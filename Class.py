@@ -1,6 +1,6 @@
 import threading
 import time
-
+import os
 import joblib
 import numpy as np
 from hmmlearn import hmm
@@ -9,6 +9,7 @@ from scipy.io import wavfile
 
 import Libs
 import Ways
+
 
 
 class myThread(threading.Thread):  # 自己编写的myThread类，支持暂停，继续，终止线程的操作
@@ -39,7 +40,6 @@ class myThread(threading.Thread):  # 自己编写的myThread类，支持暂停�
             else:
                 self.exit()
                 self.stop()
-
 
 class Timer():  # 计时器类，支持覆盖计时器，设定计时时间，开始、暂停计时，查看剩余时间的操作。
     def __init__(self):
@@ -88,6 +88,10 @@ class Timer():  # 计时器类，支持覆盖计时器，设定计时时间，�
 CATEGORY = ['exit', '5min', '1min', 'pause',
             'resume', 'howlong', 'stop', 'Intem', 'Tem']
 
+def compute_mfcc(file):
+    fs, audio = wavfile.read(file)
+    mfcc_feat = mfcc(audio)
+    return mfcc_feat
 class Model():#GMM-HMM模型
     def __init__(self, CATEGORY=None, n_comp=3, n_mix=3, cov_type='diag', n_iter=1000):
         super(Model, self).__init__()

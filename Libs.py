@@ -1,21 +1,22 @@
 # coding = utf-8
 import json
 import sys
+import os
 from urllib.error import URLError
 from urllib.parse import quote_plus, urlencode
 from urllib.request import Request, urlopen
+import Pi
 
 import bs4
 import requests
 from bs4 import BeautifulSoup
-from playsound import playsound
 
 import Class
 
 # 调用百度语音合成api
 API_KEY = '2l75V5XghS281dcwKmgGvkpR'
 SECRET_KEY = 'n2AwmvQxuQ68oQWCYAgz0feyrN8iOOp4'
-PER = 0  # 发音人选择, 基础音库：0为度小美，1为度小宇，3为度逍遥，4为度丫丫，
+PER = 0# 发音人选择, 基础音库：0为度小美，1为度小宇，3为度逍遥，4为度丫丫，
 SPD = 4  # 语速，取值0-15，默认为5中语速
 PIT = 5  # 音调，取值0-15，默认为5中语调
 VOL = 8  # 音量，取值0-9，默认为5中音量
@@ -31,6 +32,11 @@ nid = 0
 
 class DemoError(Exception):  # 错误类
     pass
+wave_out_path = './wav/temp/test.wav'
+record_second = 1000
+def Act():
+    id_ = Pi.record_test(wave_out_path, record_second)
+    return id_
 
 
 def fetch_token():  # 生成token
@@ -58,8 +64,8 @@ def fetch_token():  # 生成token
 
 def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
     global nid, SPD
-    if len(TEXT) > 10:  # 对于长字符串选择用更快的播报速度
-        SPD = 6
+    if len(TEXT) > 10:# 对于长字符串选择用更快的播报速度
+        SPD = 5
     nid += 1
     token = fetch_token()
     tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
@@ -79,7 +85,7 @@ def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
         print('asr http response http code : ' + str(err.code))
         result_str = err.read()
         has_error = True
-    save_file = "error.txt" if has_error else '.\\wav\\temp\\result' + \
+    save_file = "error.txt" if has_error else './wav/temp/result' + \
         str(nid)+'.' + FORMAT
     with open(save_file, 'wb') as of:
         of.write(result_str)
@@ -90,23 +96,22 @@ def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
     SPD = 4
 
 
-def Act():
-    id = int(input())
-    return id
 
 
-wav_path = '.\\wav\\'
+wav_path = './wav/'
 
+def Playsound(Path):
+    os.system('aplay -D hw:1,0 %s'%Path)
 
 def Output(Path):  # 从wav文件夹下输出
-    T = Class.myThread(lambda: playsound(wav_path+Path), lambda: print('exit'))
+    T = Class.myThread(lambda: Playsound(wav_path+Path), lambda: print('exit'))
     T.start()
 
 
 def OutputText(Text):  # 通过百度TTS生成wav并输出
     global nid
     Baidu_TTS(Text)
-    path = 'temp\\result'+str(nid)+'.wav'
+    path = 'temp/result'+str(nid)+'.wav'
     Output(path)
 
 
@@ -121,3 +126,7 @@ def Get_Weather():
         ',气温' + tp['tem2'] + '到' + tp['tem1'] + '摄氏度。' + '当前户外' + tp['tem'] + '摄氏度，' + '风力' + tp['win_speed'] + \
         '。PM2.5指数为' + tp['air'] + '。' + tp['air_tips']
     return(ret)
+def compute_mfcc(file):
+    fs, audio = wavfile.read(file)
+    mfcc_feat = mfcc(audio)
+    return mfcc_feat
