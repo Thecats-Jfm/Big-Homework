@@ -1,22 +1,22 @@
 # coding = utf-8
 import json
-import sys
 import os
+import sys
 from urllib.error import URLError
 from urllib.parse import quote_plus, urlencode
 from urllib.request import Request, urlopen
-import Pi
 
 import bs4
 import requests
 from bs4 import BeautifulSoup
 
 import Class
+import Pi
 
 # 调用百度语音合成api
 API_KEY = '2l75V5XghS281dcwKmgGvkpR'
 SECRET_KEY = 'n2AwmvQxuQ68oQWCYAgz0feyrN8iOOp4'
-PER = 0# 发音人选择, 基础音库：0为度小美，1为度小宇，3为度逍遥，4为度丫丫，
+PER = 0  # 发音人选择, 基础音库：0为度小美，1为度小宇，3为度逍遥，4为度丫丫，
 SPD = 4  # 语速，取值0-15，默认为5中语速
 PIT = 5  # 音调，取值0-15，默认为5中语调
 VOL = 8  # 音量，取值0-9，默认为5中音量
@@ -27,13 +27,17 @@ CUID = "123456PYTHON"
 TTS_URL = 'http://tsn.baidu.com/text2audio'
 TOKEN_URL = 'http://openapi.baidu.com/oauth/2.0/token'
 SCOPE = 'audio_tts_post'  # 语音合成tag
-nid = 0
+nid = 0  # 临时录音数据编号
 
 
 class DemoError(Exception):  # 错误类
     pass
+
+
 wave_out_path = './wav/temp/test.wav'
 record_second = 1000
+
+
 def Act():
     id_ = Pi.record_test(wave_out_path, record_second)
     return id_
@@ -64,7 +68,7 @@ def fetch_token():  # 生成token
 
 def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
     global nid, SPD
-    if len(TEXT) > 10:# 对于长字符串选择用更快的播报速度
+    if len(TEXT) > 10:  # 对于长字符串选择用更快的播报速度
         SPD = 5
     nid += 1
     token = fetch_token()
@@ -96,12 +100,12 @@ def Baidu_TTS(TEXT):  # 根据TEXT生成result.wav
     SPD = 4
 
 
-
-
 wav_path = './wav/'
 
-def Playsound(Path):
-    os.system('aplay -D hw:1,0 %s'%Path)
+
+def Playsound(Path):  # 树莓派播放声音
+    os.system('aplay -D hw:1,0 %s' % Path)
+
 
 def Output(Path):  # 从wav文件夹下输出
     T = Class.myThread(lambda: Playsound(wav_path+Path), lambda: print('exit'))
@@ -115,7 +119,7 @@ def OutputText(Text):  # 通过百度TTS生成wav并输出
     Output(path)
 
 
-def Get_Weather():
+def Get_Weather():  # 调用api获取天气数据，并利用beautifulsoup解析数据，返回字符串
     APPID = '74783449'
     APPSecret = 'e9PPXtOn'
     url = 'https://tianqiapi.com/api?version=v6&appid='+APPID+'&appsecret='+APPSecret
@@ -126,6 +130,8 @@ def Get_Weather():
         ',气温' + tp['tem2'] + '到' + tp['tem1'] + '摄氏度。' + '当前户外' + tp['tem'] + '摄氏度，' + '风力' + tp['win_speed'] + \
         '。PM2.5指数为' + tp['air'] + '。' + tp['air_tips']
     return(ret)
+
+
 def compute_mfcc(file):
     fs, audio = wavfile.read(file)
     mfcc_feat = mfcc(audio)

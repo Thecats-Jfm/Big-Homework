@@ -8,7 +8,6 @@ from python_speech_features import mfcc
 from scipy.io import wavfile
 
 import Libs
-import Ways
 
 
 

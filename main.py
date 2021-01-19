@@ -5,7 +5,6 @@ import RPi.GPIO as GPIO
 
 import Libs
 import Pi
-import Ways
 from Class import Timer
 
 KEY = 20
