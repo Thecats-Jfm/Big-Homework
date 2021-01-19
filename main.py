@@ -13,7 +13,7 @@ KEY = 20
 if __name__ == "__main__":
     T = Timer()
 
-    def mcb(ch):  # MyCallBack
+    def mcb(ch):  # 装载按键停止计时所需的回调函数
         if(T.time == 0):
             T.exit_flag = True
         print('stop by key')

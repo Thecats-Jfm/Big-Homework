@@ -3,6 +3,7 @@ import os
 import time
 import wave
 
+import core
 import joblib
 import numpy as np
 import pyaudio
@@ -12,7 +13,6 @@ from python_speech_features import mfcc
 from scipy.io import wavfile
 
 import Class
-import core
 import Libs
 
 KEY = 20
@@ -20,11 +20,11 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(KEY, GPIO.IN, GPIO.PUD_UP)
 
 
-def Finish():
+def Finish():  # 每次结束程序释放GPIO控制
     GPIO.cleanup()
 
 
-class Temperature:
+class Temperature:  # 利用树莓派上的温度传感器获取室温
     @staticmethod
     def temperature():
         name = glob.glob('/sys/bus/w1/devices/28-*')
@@ -41,11 +41,11 @@ def compute_mfcc(file):
     return mfcc_feat
 
 
-models = Class.Model(CATEGORY=Class.CATEGORY)
+models = Class.Model(CATEGORY=Class.CATEGORY)  # 装载训练好的模型
 models.load()
 
 
-def record_test(wave_out_path, record_second):
+def record_test(wave_out_path, record_second):  # 计算输入语音对应的最大可能概率的文字
     CHUNK = 512
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -75,7 +75,7 @@ def record_test(wave_out_path, record_second):
     et = time.time()
     print("* done recording")
     print("Recorded for %fs" % (et-st))
-    if(et-st < 0.4):
+    if(et-st < 0.4):  # 若录音时间过短，不处理
         opt = -1
     else:
         opt = models.test(wave_out_path)
