@@ -23,7 +23,6 @@ if __name__ == "__main__":
         if act_id == 1:  # 计时五分钟
             T.Start(5*60)
             Libs.Output('5min_start.wav')
-
         elif act_id == 2:  # 计时一分钟
             T.Start(1*60)
             Libs.Output('1min_start.wav')
