@@ -3,7 +3,6 @@ import os
 import time
 import wave
 
-import core
 import joblib
 import numpy as np
 import pyaudio
@@ -14,6 +13,7 @@ from scipy.io import wavfile
 
 import Class
 import Libs
+import main
 
 KEY = 20
 GPIO.setmode(GPIO.BCM)
